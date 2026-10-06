@@ -20,6 +20,7 @@ model = PPO(
 )
 #agent interacts with the environment 100,000 times
 model.learn(total_timesteps=100000)
-model.save("rover_brain")
+#change filename whenever you train the neural net to avoid overwriting the previous versions
+model.save("brainzip/rover_brain_4_4")
 
 env.close()
