@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 env = RoverEnv()
 #change the model name to the one you want to evaluate
-model = PPO.load("brainzip/rover_brain_4_4", env=env)
+model = PPO.load("brainzip/rover_brain_5", env=env)
 
 obs, info = env.reset()
 

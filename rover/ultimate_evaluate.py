@@ -1,8 +1,8 @@
 from stable_baselines3 import PPO
 from environment import RoverEnv
 import numpy as np
-
-MODEL_PATH = "brainzip/rover_brain_4_4"
+#change the model name to the one you want to evaluate
+MODEL_PATH = "brainzip/rover_brain_4_6"
 NUM_RUNS = 200
 
 

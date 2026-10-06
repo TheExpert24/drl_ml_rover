@@ -224,14 +224,14 @@ class RoverEnv(gym.Env):
             not self.returning_home
             and new_distance < 3.0
         ):
-            reward += 50.0
+            reward += 100.0 + self.battery
             self.returning_home = True
 
         elif (
             self.returning_home
             and new_distance < 3.0
         ):
-            reward += 500.0
+            reward += 300.0
             terminated = True
 
         if (
