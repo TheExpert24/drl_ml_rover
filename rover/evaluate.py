@@ -1,5 +1,5 @@
 from stable_baselines3 import PPO
-from bestneuralnetperversion.environment4_4 import RoverEnv
+from rover.bestneuralnetperversion.version4_4.environment4_4 import RoverEnv
 from mission_planner import MissionPlanner
 import numpy as np
 import matplotlib.pyplot as plt
