@@ -1,5 +1,5 @@
 from stable_baselines3 import PPO
-from rover.bestneuralnetperversion.version4_4.environment4_4 import RoverEnv
+from rover.bestneuralnetperversion.version5.environment5 import RoverEnv
 from mission_planner import MissionPlanner
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 env = RoverEnv()
 
 model = PPO.load(
-    "brainzip/rover_brain_4_4",
+    "brainzip/rover_brain5",
     env=env
 )
 
@@ -137,7 +137,7 @@ path_efficiency = (
 )
 
 print()
-print("v6 rover evaluation")
+print("v5 rover evaluation")
 print()
 
 print("steps:", step + 1)
@@ -299,7 +299,7 @@ ax.set_ylim(
 
 ax.set_aspect("equal")
 ax.set_title(
-    "v6 rover evaluation"
+    "v5 rover evaluation"
 )
 ax.legend()
 ax.grid()

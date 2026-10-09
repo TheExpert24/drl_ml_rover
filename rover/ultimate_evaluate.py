@@ -1,10 +1,10 @@
 from stable_baselines3 import PPO
-from rover.bestneuralnetperversion.version4_4.environment4_4 import RoverEnv
+from environment import RoverEnv
 from mission_planner import MissionPlanner
 import numpy as np
 
 #change the model name to the one you want to evaluate
-MODEL_PATH = "brainzip/rover_brain_4_4"
+MODEL_PATH = "brainzip/rover_brain_5"
 NUM_RUNS = 200
 
 
@@ -246,7 +246,7 @@ print()
 
 print("model:", MODEL_PATH)
 print("runs:", NUM_RUNS)
-print("controller: v6.1 planner + obstacle avoidance")
+print("controller: v5 planner + obstacle avoidance")
 
 print()
 print("mission performance")
