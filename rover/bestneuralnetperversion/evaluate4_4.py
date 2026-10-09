@@ -1,20 +1,13 @@
 from stable_baselines3 import PPO
-from bestneuralnetperversion.environment4_4 import RoverEnv
-from mission_planner import MissionPlanner
+from environment import RoverEnv
 import numpy as np
 import matplotlib.pyplot as plt
 
 env = RoverEnv()
-
-model = PPO.load(
-    "brainzip/rover_brain_4_4",
-    env=env
-)
-
-planner = MissionPlanner(env)
+#change the model name to the one you want to evaluate
+model = PPO.load("brainzip/rover_brain_4_4", env=env)
 
 obs, info = env.reset()
-planner.reset()
 
 start_position = env.rover_position.copy()
 positions = [start_position.copy()]
@@ -40,18 +33,11 @@ direct_goal_distance = np.linalg.norm(
 direct_home_distance = direct_goal_distance
 
 for step in range(1000):
-    planner.apply(obs)
-    action_override = planner.get_action_override(obs)
-    if action_override is not None:
-        action = action_override
-    else:
-        action, _ = model.predict(
-            obs,
-            deterministic=True
-        )
+    action, _ = model.predict(obs, deterministic=True)
+
+    was_returning_home = env.returning_home
 
     old_position = env.rover_position.copy()
-    was_returning_home = env.returning_home
 
     if action == 0:
         left_actions += 1
@@ -65,10 +51,7 @@ for step in range(1000):
     total_reward += reward
 
     new_position = env.rover_position.copy()
-
-    positions.append(
-        new_position.copy()
-    )
+    positions.append(new_position.copy())
 
     movement_distance = np.linalg.norm(
         new_position - old_position
@@ -97,14 +80,9 @@ for step in range(1000):
         base_distance
     )
 
-    if (
-        not was_returning_home
-        and env.returning_home
-    ):
+    if not was_returning_home and env.returning_home:
         goal_reached = True
-        goal_reached_position = (
-            new_position.copy()
-        )
+        goal_reached_position = new_position.copy()
         goal_step = step + 1
 
     if terminated or truncated:
@@ -115,29 +93,24 @@ positions = np.array(positions)
 returned_home = (
     goal_reached
     and np.linalg.norm(
-        env.rover_position -
-        env.base_position
+        env.rover_position - env.base_position
     ) < 3.0
 )
 
-battery_used = (
-    env.max_battery -
-    env.battery
-)
+battery_used = env.max_battery - env.battery
 
 theoretical_minimum_distance = (
     direct_goal_distance * 2.0
 )
 
 path_efficiency = (
-    theoretical_minimum_distance /
-    distance_traveled
+    theoretical_minimum_distance / distance_traveled
     if distance_traveled > 0
     else 0.0
 )
 
 print()
-print("v6 rover evaluation")
+print("rover evaluation")
 print()
 
 print("steps:", step + 1)
@@ -153,45 +126,24 @@ if goal_step is not None:
 
 print()
 print("battery")
-print(
-    "battery remaining:",
-    round(env.battery, 2)
-)
-print(
-    "battery used:",
-    round(battery_used, 2)
-)
+print("battery remaining:", round(env.battery, 2))
+print("battery used:", round(battery_used, 2))
 
 print()
 print("distance")
-print(
-    "direct base -> goal:",
-    round(direct_goal_distance, 2)
-)
-print(
-    "direct goal -> base:",
-    round(direct_home_distance, 2)
-)
+print("direct base -> goal:", round(direct_goal_distance, 2))
+print("direct goal -> base:", round(direct_home_distance, 2))
 print(
     "theoretical minimum mission distance:",
-    round(
-        theoretical_minimum_distance,
-        2
-    )
+    round(theoretical_minimum_distance, 2)
 )
 print(
     "actual distance traveled:",
-    round(
-        distance_traveled,
-        2
-    )
+    round(distance_traveled, 2)
 )
 print(
     "path efficiency:",
-    round(
-        path_efficiency * 100,
-        2
-    ),
+    round(path_efficiency * 100, 2),
     "%"
 )
 
@@ -199,52 +151,30 @@ print()
 print("closest distances")
 print(
     "closest to goal:",
-    round(
-        closest_goal_distance,
-        2
-    )
+    round(closest_goal_distance, 2)
 )
 print(
     "closest to base:",
-    round(
-        closest_base_distance,
-        2
-    )
+    round(closest_base_distance, 2)
 )
-
-print()
-print("planner")
-print("final phase:", planner.phase)
-print("replans:", planner.replans)
 
 print()
 print("actions")
 print("left turns:", left_actions)
 print("right turns:", right_actions)
 print("forward actions:", forward_actions)
-print(
-    "blocked forward actions:",
-    blocked_forward_actions
-)
+print("blocked forward actions:", blocked_forward_actions)
 
 print()
 print("final position")
 print(
     "x:",
-    round(
-        env.rover_position[0],
-        2
-    ),
+    round(env.rover_position[0], 2),
     "y:",
-    round(
-        env.rover_position[1],
-        2
-    )
+    round(env.rover_position[1], 2)
 )
 
-fig, ax = plt.subplots(
-    figsize=(8, 8)
-)
+fig, ax = plt.subplots(figsize=(8, 8))
 
 for obstacle in env.obstacles:
     circle = plt.Circle(
@@ -267,7 +197,7 @@ ax.scatter(
     start_position[1],
     s=120,
     marker="s",
-    label="base"
+    label="destination"
 )
 
 ax.scatter(
@@ -287,23 +217,14 @@ if goal_reached:
         label="goal reached"
     )
 
-ax.set_xlim(
-    0,
-    env.world_size
-)
-
-ax.set_ylim(
-    0,
-    env.world_size
-)
-
+ax.set_xlim(0, env.world_size)
+ax.set_ylim(0, env.world_size)
 ax.set_aspect("equal")
-ax.set_title(
-    "v6 rover evaluation"
-)
+ax.set_title("rover brain evaluation")
 ax.legend()
 ax.grid()
 
 plt.show()
 
 env.close()
+
