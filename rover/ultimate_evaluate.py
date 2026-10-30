@@ -4,7 +4,7 @@ from mission_planner import MissionPlanner
 import numpy as np
 
 #change the model name to the one you want to evaluate
-MODEL_PATH = "brainzip/rover_brain_5"
+MODEL_PATH = "brainzip/rover_brain_6"
 NUM_RUNS = 200
 
 

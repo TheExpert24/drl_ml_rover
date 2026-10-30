@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 env = RoverEnv()
 
 model = PPO.load(
-    "brainzip/rover_brain_5",
+    "brainzip/rover_brain_6",
     env=env
 )
 
